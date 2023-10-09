@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "chainbase"
+version = "0.0.1"
+description = "Chainbase is a library for instantly creating langchain-based APIs with autoconfiguration for proprietary data."
+authors = ["Eric Robinson"]
+license = "MIT"
+readme = "README.md"
+packages = []
+
+[tool.poetry.group.main.dependencies]
+python = "~3.11"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.3.2"
+pruner = "^0.0.6"
+
+[tool.poetry.group.lib.dependencies]
+chainbase-lib = { path = "workspaces/lib", develop = true}
+
+[tool.poetry.group.hrr.dependencies]
+chainbase-hrr = { path = "workspaces/hybrid_rerank_retrieval", develop = true}
+
+[tool.coverage.run]
+source = ["chainbase","workspaces"]
+omit = ["__init__.py", "initial_data.py", "init_db.py"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
