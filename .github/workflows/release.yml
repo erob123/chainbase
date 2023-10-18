@@ -31,6 +31,7 @@ jobs:
           poetry-version: 1.5.1
       - name: Configure git
         run: |
+          git pull
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
           git push
