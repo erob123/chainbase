@@ -1,7 +1,7 @@
 # adapted from FastAPI's mkdocs.yml at https://github.com/tiangolo/fastapi
-site_name: Aimbase
+site_name: Chainbase
 site_description: Declarative, instant REST APIs for base AI Models based on instarest, a FastAPI, Pydantic, SQLAlchemy, and PostgreSQL library, and MinIO.
-site_url: https://aimbase.erob.io
+site_url: https://chainbase.erob.io
 theme:
   name: material
   palette:
@@ -34,15 +34,15 @@ theme:
   logo: img/icon-white.svg
   favicon: img/favicon.png
   language: en
-repo_name: erob123/aimbase
-repo_url: https://github.com/erob123/aimbase
+repo_name: erob123/chainbase
+repo_url: https://github.com/erob123/chainbase
 edit_uri: ''
 plugins:
   search: null
   markdownextradata:
     data: ../en/data
 nav:
-- Aimbase: index.md
+- chainbase: index.md
 - contributing.md
 - release-notes.md
 markdown_extensions:
@@ -73,7 +73,7 @@ extra:
   #   property: TBD
   social:
   - icon: fontawesome/brands/github-alt
-    link: https://github.com/erob123/aimbase
+    link: https://github.com/erob123/chainbase
   - icon: fontawesome/brands/linkedin
     link: https://www.linkedin.com/in/eric-erob-robinson-37916812a/
 extra_css:

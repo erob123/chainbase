@@ -1,7 +1,7 @@
 # Getting Started
-To get started with `aimbase` for your application, visit the docs at <a href="https://aimbase.erob.io/" target="_blank">https://aimbase.erob.io/</a>
+To get started with `chainbase` for your application, visit the docs at <a href="https://chainbase.erob.io/" target="_blank">https://chainbase.erob.io/</a>
 
-To contribute to `aimbase`, see the [contributing](#contributing) section below.
+To contribute to `chainbase`, see the [contributing](#contributing) section below.
 
 # Contributing
 ## Getting Started Locally
