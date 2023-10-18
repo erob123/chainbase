@@ -16,6 +16,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.11.2]
+        workspace: [./,./workspaces/hybrid_rerank_retrieval]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -35,6 +36,7 @@ jobs:
           git push
       - name: bump release version and tag
         run: |
+          cd ${{ matrix.workspace }}
           poetry version ${{ github.event.inputs.bump }}
           export NEW_VERSION=v$(poetry version -s)
           git commit -am "[skip actions] Bumping to version $NEW_VERSION"
@@ -42,6 +44,7 @@ jobs:
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.17
         with:
+          package_directory: ${{ matrix.workspace }}
           python_version: "3.11.2"
           poetry_version: "==1.6.1" # (PIP version specifier syntax)
           pypi_token: ${{ secrets.PYPI_TOKEN }}
@@ -49,6 +52,7 @@ jobs:
           ignore_dev_requirements: "yes"
       - name: prepatch to the next version
         run: |
+          cd ${{ matrix.workspace }}
           poetry version prepatch
           export NEW_VERSION=v$(poetry version -s)
           git commit -am "[skip actions] Prepatching to $NEW_VERSION"
