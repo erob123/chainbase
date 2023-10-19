@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chainbase-hrr"
-version = "0.0.2a1"
+version = "0.0.2a2"
 description = "A hybrid approach to semantic query retrieval using the Beir rerank methodology"
 authors = ["Eric Robinson"]
 license = "MIT"
