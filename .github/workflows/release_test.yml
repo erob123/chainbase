@@ -43,9 +43,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build and publish to pypi test
-        working-directory: ${{ matrix.workspace }}
         uses: JRubics/poetry-publish@v1.17
         with:
+          working-directory: ${{ matrix.workspace }}
           # package_directory: ${{ matrix.workspace }}
           python_version: "3.11.2"
           poetry_version: "==1.6.1" # (PIP version specifier syntax)
