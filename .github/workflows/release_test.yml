@@ -5,6 +5,7 @@ on:
 jobs:
   bump-version:
     strategy:
+      max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
       matrix:
         os: [ubuntu-latest]
         python-version: [3.11.2]
