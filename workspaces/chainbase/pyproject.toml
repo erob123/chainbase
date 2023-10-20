@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "chainbase"
+version = "0.0.2a8"
+description = "Chainbase is a library for instantly creating langchain-based APIs with autoconfiguration for proprietary data."
+authors = ["Eric Robinson"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "chainbase"}]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -9,7 +9,11 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.11.2]
-        workspace: [./,./workspaces/hybrid_rerank_retrieval]
+        workspace:
+          - ./
+          - ./workspaces/lib
+          - ./workspaces/chainbase
+          - ./workspaces/hybrid_rerank_retrieval
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -37,7 +41,9 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.11.2]
-        workspace: [./,./workspaces/hybrid_rerank_retrieval]
+        workspace:
+          - ./workspaces/chainbase
+          - ./workspaces/hybrid_rerank_retrieval
     runs-on: ${{ matrix.os }}
     needs: bump-version
     steps:
