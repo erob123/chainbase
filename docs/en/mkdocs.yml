@@ -43,6 +43,8 @@ plugins:
     data: ../en/data
 nav:
 - chainbase: index.md
+- SDKs:
+  - hybrid rerank retrieval: workspaces/hybrid_rerank_retrieval/index.md
 - contributing.md
 - release-notes.md
 markdown_extensions:
