@@ -27,13 +27,19 @@ jobs:
         with:
           poetry-version: 1.5.1
       - name: Bump version
-        run: cd ${{ matrix.workspace }} && poetry version prerelease
+        run: |
+          cd ${{ matrix.workspace }}
+          poetry version prerelease
+          export NEW_VERSION=v$(poetry version -s)
+      - name: Bump installed common lib version
+        if: ${{ matrix.workspace }} != './workspaces/common_lib'
+        run: |
+          poetry add chainbase-lib@$NEW_VERSION
       - name: Commit version
         run: |
           git pull
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
-          export NEW_VERSION=v$(poetry version -s)
           git commit -am "[skip actions] Bumping to version $NEW_VERSION"
           git push
   publish:
@@ -42,6 +48,7 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.11.2]
         workspace:
+          - ./workspaces/common_lib
           - ./workspaces/chainbase
           - ./workspaces/hybrid_rerank_retrieval
     runs-on: ${{ matrix.os }}
@@ -55,6 +62,11 @@ jobs:
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 1.5.1
+      - name: Install common libraries
+        run: |
+          cd ./workspaces/common_lib
+          git pull
+          poetry install
       - name: Build and publish to pypi test
         run: |
           cd ${{ matrix.workspace }}
