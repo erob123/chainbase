@@ -43,14 +43,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build and publish to pypi test
-        uses: JRubics/poetry-publish@v1.17
-        with:
-          working-directory: ${{ matrix.workspace }}
-          # package_directory: ${{ matrix.workspace }}
-          python_version: "3.11.2"
-          poetry_version: "==1.6.1" # (PIP version specifier syntax)
-          pypi_token: ${{ secrets.PYPI_TOKEN_TEST }}
-          repository_name: "testpypi"
-          repository_url: "https://test.pypi.org/legacy/"
-          allow_poetry_pre_release: "yes"
-          ignore_dev_requirements: "yes"
+        working-directory: ${{ matrix.workspace }}
+        run: |
+          poetry config repositories.testpypi https://test.pypi.org/legacy/
+          poetry config pypi-token.testpypi ${{ secrets.PYPI_TOKEN_TEST }}
+          poetry build
+          poetry publish -r testpypi
+
+
+
+      # - name: Build and publish to pypi test
+      #   uses: JRubics/poetry-publish@v1.17
+      #   with:
+      #     working-directory: ${{ matrix.workspace }}
+      #     # package_directory: ${{ matrix.workspace }}
+      #     python_version: "3.11.2"
+      #     poetry_version: "==1.6.1" # (PIP version specifier syntax)
+      #     pypi_token: ${{ secrets.PYPI_TOKEN_TEST }}
+      #     repository_name: "testpypi"
+      #     repository_url: "https://test.pypi.org/legacy/"
+      #     allow_poetry_pre_release: "yes"
+      #     ignore_dev_requirements: "yes"
