@@ -12,7 +12,6 @@ aimbase = "^0.0.4a3"
 langchain = "^0.0.316"
 openai = "^0.28.1"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
