@@ -11,7 +11,7 @@ jobs:
         python-version: [3.11.2]
         workspace:
           - ./
-          - ./workspaces/lib
+          - ./workspaces/common_lib
           - ./workspaces/chainbase
           - ./workspaces/hybrid_rerank_retrieval
     runs-on: ${{ matrix.os }}
