@@ -15,7 +15,7 @@ pre-commit = "^3.3.2"
 pruner = "^0.0.6"
 
 [tool.poetry.group.lib.dependencies]
-chainbase-lib = { path = "./workspaces/lib", develop = true}
+chainbase-lib = { path = "./workspaces/common_lib", develop = true}
 
 [tool.poetry.group.hrr.dependencies]
 chainbase-hrr = { path = "./workspaces/hybrid_rerank_retrieval", develop = true}
