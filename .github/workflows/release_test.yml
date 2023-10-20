@@ -42,6 +42,10 @@ jobs:
     needs: bump-version
     steps:
       - uses: actions/checkout@v3
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.5.1
       - name: Build and publish to pypi test
         working-directory: ${{ matrix.workspace }}
         run: |
