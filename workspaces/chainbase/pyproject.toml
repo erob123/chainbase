@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chainbase"
-version = "0.0.2a14"
+version = "0.0.2a15"
 description = "Chainbase is a library for instantly creating langchain-based APIs with autoconfiguration for proprietary data."
 authors = ["Eric Robinson"]
 license = "MIT"
