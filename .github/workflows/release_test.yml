@@ -64,6 +64,7 @@ jobs:
           poetry-version: 1.5.1
       - name: Build and publish to pypi test
         run: |
+          git pull
           cd ${{ matrix.workspace }}
           poetry config repositories.testpypi https://test.pypi.org/legacy/
           poetry config pypi-token.testpypi ${{ secrets.PYPI_TOKEN_TEST }}
