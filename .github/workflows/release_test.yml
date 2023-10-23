@@ -68,6 +68,7 @@ jobs:
           cd ${{ matrix.workspace }}
           poetry config repositories.testpypi https://test.pypi.org/legacy/
           poetry config pypi-token.testpypi ${{ secrets.PYPI_TOKEN_TEST }}
+          poetry install
           poetry build
           poetry publish -r testpypi
 
