@@ -26,8 +26,6 @@ name = "testpypi"
 url = "https://test.pypi.org/simple/"
 priority = "explicit"
 
-[tool.poetry.dependencies]
-chainbase-lib = {version = "^0.0.2a25", source = "testpypi"}
 [tool.coverage.run]
 source = ["chainbase","workspaces"]
 omit = ["__init__.py", "initial_data.py", "init_db.py"]
