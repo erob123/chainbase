@@ -35,7 +35,9 @@ jobs:
           poetry version prerelease
           export NEW_VERSION=v$(poetry version -s)
       - name: Bump installed common lib version
+        if: matrix.workspace != './'
         run: |
+          cd ${{ matrix.workspace }}
           poetry source add --priority=explicit testpypi https://test.pypi.org/simple/
           poetry add --source testpypi chainbase-lib@$NEW_VERSION
       - name: Commit version
