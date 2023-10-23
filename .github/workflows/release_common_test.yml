@@ -25,12 +25,12 @@ jobs:
           poetry-version: 1.5.1
       - name: Bump version
         run: |
+          git pull
           cd ${{ matrix.workspace }}
           poetry version prerelease
           export NEW_VERSION=v$(poetry version -s)
       - name: Commit version
         run: |
-          git pull
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
           git commit -am "[skip actions] Bumping to version $NEW_VERSION"
