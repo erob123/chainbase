@@ -33,6 +33,11 @@ jobs:
           cd ${{ matrix.workspace }}
           poetry version prerelease
           export NEW_VERSION=v$(poetry version -s)
+      - name: Install new common lib version
+        run: |
+          git pull
+          cd ./workspaces/common_lib
+          poetry install
       - name: Bump installed common lib version
         run: |
           poetry add chainbase-lib@$NEW_VERSION
