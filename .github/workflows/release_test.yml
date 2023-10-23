@@ -33,14 +33,10 @@ jobs:
           cd ${{ matrix.workspace }}
           poetry version prerelease
           export NEW_VERSION=v$(poetry version -s)
-      - name: Install new common lib version
-        run: |
-          git pull
-          cd ./workspaces/common_lib
-          poetry install
       - name: Bump installed common lib version
         run: |
-          poetry add chainbase-lib@$NEW_VERSION
+          poetry source add --priority=explicit testpypi https://test.pypi.org/legacy/
+          poetry add --source testpypi chainbase-lib@$NEW_VERSION
       - name: Commit version
         run: |
           git pull
