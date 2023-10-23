@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chainbase-lib"
-version = "0.0.2a25"
+version = "0.0.2a26"
 description = "Common chainbase libraries"
 authors = ["Eric Robinson"]
 license = "MIT"
