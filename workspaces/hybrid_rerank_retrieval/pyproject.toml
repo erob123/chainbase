@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chainbase-hrr"
-version = "0.0.2a26"
+version = "0.0.2a27"
 description = "A hybrid approach to semantic query retrieval using the Beir rerank methodology"
 authors = ["Eric Robinson"]
 license = "MIT"
@@ -8,6 +8,7 @@ readme = "README.md"
 packages = [{include = "chainbase"}]
 
 [tool.poetry.dependencies]
+python = "~3.11"
 chainbase-lib = { path = "../common_lib"}
 faiss-cpu = "^1.7.4"
 rank-bm25 = "^0.2.2"
