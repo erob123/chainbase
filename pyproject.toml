@@ -20,12 +20,6 @@ chainbase-lib = { path = "./workspaces/common_lib", develop = true}
 [tool.poetry.group.hrr.dependencies]
 chainbase-hrr = { path = "./workspaces/hybrid_rerank_retrieval", develop = true}
 
-
-[[tool.poetry.source]]
-name = "testpypi"
-url = "https://test.pypi.org/simple/"
-priority = "explicit"
-
 [tool.coverage.run]
 source = ["chainbase","workspaces"]
 omit = ["__init__.py", "initial_data.py", "init_db.py"]
