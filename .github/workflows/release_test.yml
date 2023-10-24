@@ -29,22 +29,23 @@ jobs:
         with:
           poetry-version: 1.5.1
       - name: Bump version
+        id: bump_version
         run: |
           git pull
           cd ${{ matrix.workspace }}
           poetry version prerelease
-          export NEW_VERSION=v$(poetry version -s)
+          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
       - name: Bump installed common lib version
         if: matrix.workspace != './'
         run: |
           cd ${{ matrix.workspace }}
           poetry source add --priority=explicit testpypi https://test.pypi.org/simple/
-          poetry add --source testpypi chainbase-lib@$NEW_VERSION
+          poetry add --source testpypi chainbase-lib@${{ steps.bump_version.outputs.NEW_VERSION }}
       - name: Commit version
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
-          git commit -am "[skip actions] Bumping to version $NEW_VERSION"
+          git commit -am "[skip actions] Bumping to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
           git push
   publish:
     strategy:
@@ -73,7 +74,6 @@ jobs:
           poetry config pypi-token.testpypi ${{ secrets.PYPI_TOKEN_TEST }}
           poetry build
           poetry publish -r testpypi
-
 
 
       # - name: Build and publish to pypi test

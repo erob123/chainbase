@@ -24,16 +24,17 @@ jobs:
         with:
           poetry-version: 1.5.1
       - name: Bump version
+        id: bump_version
         run: |
           git pull
           cd ${{ matrix.workspace }}
           poetry version prerelease
-          export NEW_VERSION=v$(poetry version -s)
+          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
       - name: Commit version
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
-          git commit -am "[skip actions] Bumping to version $NEW_VERSION"
+          git commit -am "[skip actions] Bumping to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
           git push
   publish:
     strategy:
