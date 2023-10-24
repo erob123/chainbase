@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chainbase"
-version = "0.0.2a26"
+version = "0.0.2a27"
 description = "Chainbase is a library for instantly creating langchain-based APIs with autoconfiguration for proprietary data."
 authors = ["Eric Robinson"]
 license = "MIT"
@@ -9,7 +9,7 @@ packages = [{include = "chainbase"}]
 
 [tool.poetry.dependencies]
 python = "~3.11"
-chainbase-lib = {version = "^0.0.2a25", source = "testpypi"}
+chainbase-lib = {version = "0.0.2a27", source = "testpypi"}
 
 [[tool.poetry.source]]
 name = "testpypi"
