@@ -99,36 +99,38 @@ jobs:
         run: |
           git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
           git push
+  publish:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.11.2]
+        workspace:
+          - ./workspaces/chainbase
+          - ./workspaces/hybrid_rerank_retrieval
+    runs-on: ${{ matrix.os }}
+    needs:
+      - release
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.5.1
       - name: Build and publish to pypi
-        if: matrix.workspace != './'
         run: |
+          git pull
           cd ${{ matrix.workspace }}
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry build
           poetry publish
-
-
-
-      # - name: Build and publish to pypi
-      #   uses: JRubics/poetry-publish@v1.17
-      #   with:
-      #     package_directory: ${{ matrix.workspace }}
-      #     python_version: "3.11.2"
-      #     poetry_version: "==1.6.1" # (PIP version specifier syntax)
-      #     pypi_token: ${{ secrets.PYPI_TOKEN }}
-      #     allow_poetry_pre_release: "yes"
-      #     ignore_dev_requirements: "yes"
-
-      # - name: prepatch to the next version
-      #   run: |
-      #     cd ${{ matrix.workspace }}
-      #     poetry version prepatch
-      #     export NEW_VERSION=v$(poetry version -s)
-      #     git commit -am "[skip actions] Prepatching to $NEW_VERSION"
   tag:
     needs:
       - common-lib
       - release
+      - publish
     runs-on: ubuntu-latest
     steps:
       - name: Tag release
