@@ -11,13 +11,17 @@ on:
           - minor
           - patch
 jobs:
-  release:
+  common-lib:
     strategy:
+      max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
       matrix:
         os: [ubuntu-latest]
         python-version: [3.11.2]
-        workspace: [./,./workspaces/hybrid_rerank_retrieval]
+        workspace:
+          - ./workspaces/common_lib
     runs-on: ${{ matrix.os }}
+    outputs:
+      new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,30 +38,101 @@ jobs:
           git pull
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email '<>'
-          git push
-      - name: bump release version and tag
+      - name: bump release version
+        id: bump_version
         run: |
           cd ${{ matrix.workspace }}
           poetry version ${{ github.event.inputs.bump }}
-          export NEW_VERSION=v$(poetry version -s)
-          git commit -am "[skip actions] Bumping to version $NEW_VERSION"
-          git tag -a $NEW_VERSION -m $NEW_VERSION
+          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
+      - name: Commit and push
+        run: |
+          git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
+          git push
       - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.17
-        with:
-          package_directory: ${{ matrix.workspace }}
-          python_version: "3.11.2"
-          poetry_version: "==1.6.1" # (PIP version specifier syntax)
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
-          allow_poetry_pre_release: "yes"
-          ignore_dev_requirements: "yes"
-      - name: prepatch to the next version
         run: |
           cd ${{ matrix.workspace }}
-          poetry version prepatch
-          export NEW_VERSION=v$(poetry version -s)
-          git commit -am "[skip actions] Prepatching to $NEW_VERSION"
-      - name: Push results
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          poetry build
+          poetry publish
+  release:
+    needs:
+      - common-lib
+    strategy:
+      max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.11.2]
+        workspace:
+          - ./
+          - ./workspaces/chainbase
+          - ./workspaces/hybrid_rerank_retrieval
+    runs-on: ${{ matrix.os }}
+    outputs:
+      new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.DEPLOY_TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.5.1
+      - name: Configure git
         run: |
+          git pull
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email '<>'
+      - name: bump release version
+        id: bump_version
+        run: |
+          cd ${{ matrix.workspace }}
+          poetry version ${{ github.event.inputs.bump }}
+          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
+      - name: Bump installed common lib version
+        if: matrix.workspace != './'
+        run: |
+          poetry add chainbase-lib@${{ steps.bump_version.outputs.NEW_VERSION }}
+      - name: Commit and push
+        run: |
+          git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
           git push
+      - name: Build and publish to pypi
+        if: matrix.workspace != './'
+        run: |
+          cd ${{ matrix.workspace }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          poetry build
+          poetry publish
+
+
+
+      # - name: Build and publish to pypi
+      #   uses: JRubics/poetry-publish@v1.17
+      #   with:
+      #     package_directory: ${{ matrix.workspace }}
+      #     python_version: "3.11.2"
+      #     poetry_version: "==1.6.1" # (PIP version specifier syntax)
+      #     pypi_token: ${{ secrets.PYPI_TOKEN }}
+      #     allow_poetry_pre_release: "yes"
+      #     ignore_dev_requirements: "yes"
+
+      # - name: prepatch to the next version
+      #   run: |
+      #     cd ${{ matrix.workspace }}
+      #     poetry version prepatch
+      #     export NEW_VERSION=v$(poetry version -s)
+      #     git commit -am "[skip actions] Prepatching to $NEW_VERSION"
+  tag:
+    needs:
+      - common-lib
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tag release
+        run: |
+          git pull
+          git tag -a v$${{ needs.common-lib.outputs.new_version }} -m v$${{ needs.common-lib.outputs.new_version }}
           git push --tags
