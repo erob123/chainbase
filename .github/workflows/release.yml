@@ -63,7 +63,7 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.11.2]
         workspace:
-          # - ./
+          - ./
           - ./workspaces/chainbase
           - ./workspaces/hybrid_rerank_retrieval
     runs-on: ${{ matrix.os }}
@@ -130,8 +130,8 @@ jobs:
   tag:
     needs:
       - common-lib
-    #   - release
-    #   - publish
+      - release
+      - publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
