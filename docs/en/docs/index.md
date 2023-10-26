@@ -227,7 +227,7 @@ and the response received (with calculated `embeddings`):
 ```
 
 And that's it! You have successfully created a base API for `sentence-transformers` embeddings. Continue through the documentation to see how to build more extensible APIs using `sentence-transformers` and other AI models
-with `aimbase`.
+with `chainbase`.
 
 <p align="center">
     <em>All done in under 50 lines of code.</em>
