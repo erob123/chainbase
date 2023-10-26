@@ -94,6 +94,7 @@ jobs:
       - name: Bump installed common lib version
         if: matrix.workspace != './'
         run: |
+          cd ${{ matrix.workspace }}
           poetry add chainbase-lib@${{ steps.bump_version.outputs.NEW_VERSION }}
       - name: Commit and push
         run: |
