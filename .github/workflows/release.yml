@@ -11,129 +11,130 @@ on:
           - minor
           - patch
 jobs:
-  common-lib:
-    strategy:
-      max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.11.2]
-        workspace:
-          - ./workspaces/common_lib
-    runs-on: ${{ matrix.os }}
-    outputs:
-      new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-            token: ${{ secrets.DEPLOY_TOKEN }}
-      # - uses: actions/setup-python@v4
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      # - name: Setup poetry
-      #   uses: abatilo/actions-poetry@v2.0.0
-      #   with:
-      #     poetry-version: 1.5.1
-      # - name: Configure git
-      #   run: |
-      #     git pull
-      #     git config --global user.name 'GitHub Actions Bot'
-      #     git config --global user.email '<>'
-      # - name: bump release version
-      #   id: bump_version
-      #   run: |
-      #     cd ${{ matrix.workspace }}
-      #     poetry version ${{ github.event.inputs.bump }}
-      #     echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
-      # - name: Commit and push
-      #   run: |
-      #     git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
-      #     git push
-      # - name: Build and publish to pypi
-      #   run: |
-      #     cd ${{ matrix.workspace }}
-      #     poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-      #     poetry build
-      #     poetry publish
-  release:
-    needs:
-      - common-lib
-    strategy:
-      max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.11.2]
-        workspace:
-          # - ./
-          - ./workspaces/chainbase
-          - ./workspaces/hybrid_rerank_retrieval
-    runs-on: ${{ matrix.os }}
-    outputs:
-      new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-            token: ${{ secrets.DEPLOY_TOKEN }}
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Setup poetry
-        uses: abatilo/actions-poetry@v2.0.0
-        with:
-          poetry-version: 1.5.1
-      - name: Configure git
-        run: |
-          git pull
-          git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email '<>'
-      - name: bump release version
-        id: bump_version
-        run: |
-          cd ${{ matrix.workspace }}
-          poetry version ${{ github.event.inputs.bump }}
-          echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
-      - name: Bump installed common lib version
-        if: matrix.workspace != './'
-        run: |
-          cd ${{ matrix.workspace }}
-          poetry add chainbase-lib@${{ steps.bump_version.outputs.NEW_VERSION }}
-      - name: Commit and push
-        run: |
-          git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
-          git push
-  publish:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.11.2]
-        workspace:
-          - ./workspaces/chainbase
-          - ./workspaces/hybrid_rerank_retrieval
-    runs-on: ${{ matrix.os }}
-    needs:
-      - release
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Setup poetry
-        uses: abatilo/actions-poetry@v2.0.0
-        with:
-          poetry-version: 1.5.1
-      - name: Build and publish to pypi
-        run: |
-          git pull
-          cd ${{ matrix.workspace }}
-          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-          poetry build
-          poetry publish
+  # common-lib:
+  #   strategy:
+  #     max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: [3.11.2]
+  #       workspace:
+  #         - ./workspaces/common_lib
+  #   runs-on: ${{ matrix.os }}
+  #   outputs:
+  #     new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #           token: ${{ secrets.DEPLOY_TOKEN }}
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Setup poetry
+  #       uses: abatilo/actions-poetry@v2.0.0
+  #       with:
+  #         poetry-version: 1.5.1
+  #     - name: Configure git
+  #       run: |
+  #         git pull
+  #         git config --global user.name 'GitHub Actions Bot'
+  #         git config --global user.email '<>'
+  #     - name: bump release version
+  #       id: bump_version
+  #       run: |
+  #         cd ${{ matrix.workspace }}
+  #         poetry version ${{ github.event.inputs.bump }}
+  #         echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
+  #     - name: Commit and push
+  #       run: |
+  #         git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
+  #         git push
+  #     - name: Build and publish to pypi
+  #       run: |
+  #         cd ${{ matrix.workspace }}
+  #         poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+  #         poetry build
+  #         poetry publish
+  # release:
+  #   needs:
+  #     - common-lib
+  #   strategy:
+  #     max-parallel: 1 #not ideal, but ensures that we don't have commits blocking each other in main from this set of matrixed jobs
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: [3.11.2]
+  #       workspace:
+  #         # - ./
+  #         - ./workspaces/chainbase
+  #         - ./workspaces/hybrid_rerank_retrieval
+  #   runs-on: ${{ matrix.os }}
+  #   outputs:
+  #     new_version: ${{ steps.bump_version.outputs.NEW_VERSION }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #           token: ${{ secrets.DEPLOY_TOKEN }}
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Setup poetry
+  #       uses: abatilo/actions-poetry@v2.0.0
+  #       with:
+  #         poetry-version: 1.5.1
+  #     - name: Configure git
+  #       run: |
+  #         git pull
+  #         git config --global user.name 'GitHub Actions Bot'
+  #         git config --global user.email '<>'
+  #     - name: bump release version
+  #       id: bump_version
+  #       run: |
+  #         cd ${{ matrix.workspace }}
+  #         poetry version ${{ github.event.inputs.bump }}
+  #         echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_OUTPUT
+  #     - name: Bump installed common lib version
+  #       if: matrix.workspace != './'
+  #       run: |
+  #         cd ${{ matrix.workspace }}
+  #         poetry add chainbase-lib@${{ steps.bump_version.outputs.NEW_VERSION }}
+  #     - name: Commit and push
+  #       run: |
+  #         git commit -am "[skip actions] Bumping ${{ matrix.workspace }} to version ${{ steps.bump_version.outputs.NEW_VERSION }}"
+  #         git push
+  # publish:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       python-version: [3.11.2]
+  #       workspace:
+  #         - ./workspaces/chainbase
+  #         - ./workspaces/hybrid_rerank_retrieval
+  #   runs-on: ${{ matrix.os }}
+  #   needs:
+  #     - release
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Setup poetry
+  #       uses: abatilo/actions-poetry@v2.0.0
+  #       with:
+  #         poetry-version: 1.5.1
+  #     - name: Build and publish to pypi
+  #       run: |
+  #         git pull
+  #         cd ${{ matrix.workspace }}
+  #         poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+  #         poetry build
+  #         poetry publish
   tag:
-    needs:
-      - common-lib
-      - release
-      - publish
+    # needs:
+    #   - common-lib
+    #   - release
+    #   - publish
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Tag release
         run: |
           git pull
