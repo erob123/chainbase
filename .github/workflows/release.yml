@@ -138,5 +138,7 @@ jobs:
       - name: Tag release
         run: |
           git pull
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email '<>'
           git tag -a v$${{ needs.common-lib.outputs.new_version }} -m v$${{ needs.common-lib.outputs.new_version }}
           git push --tags
